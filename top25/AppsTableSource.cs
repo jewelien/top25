@@ -6,7 +6,7 @@ namespace top25
 {
 	public class AppsTableSource : UITableViewSource
 	{
-		public NSArray appsList {
+		private NSArray appsList {
 			get {
 				return AppController.SharedInstance.appsList;
 			}
@@ -47,10 +47,15 @@ namespace top25
 			tableView.DeselectRow (indexPath, true);
 		}
 
-		public override string TitleForHeader (UITableView tableView, nint section)
+//		public override string TitleForHeader (UITableView tableView, nint section)
+//		{
+//			NSString dateString = (NSString)(string.Format("last fetched: {0}",AppController.SharedInstance.lastFetchedDateForAppsString));
+//			return dateString;
+//		}
+
+		public override nfloat GetHeightForHeader (UITableView tableView, nint section)
 		{
-			NSString dateString = (NSString)(string.Format("last fetched: {0}",AppController.SharedInstance.lastFetchedDateForAppsString));
-			return dateString;
+			return 50;
 		}
 
 		public override UIView GetViewForHeader (UITableView tableView, nint section)

@@ -10,6 +10,9 @@ namespace top25
 {
 	public class AppController
 	{
+		public NSArray appsList { get; set; }
+		public NSString lastFetchedDateForAppsString { get; set;}
+
 		private static AppController s_instance;
 
 		public static AppController SharedInstance {
@@ -26,9 +29,6 @@ namespace top25
 			NSString updateAppsKey = (NSString)"updateAppsList";
 			NSNotificationCenter.DefaultCenter.AddObserver(updateAppsKey, updateAppsArrayFromFileWithDictionaryArray);
 		}
-
-		public NSArray appsList { get; set; }
-		public NSString lastFetchedDateForAppsString { get; set;}
 
 		void updateAppsArrayFromFileWithDictionaryArray (NSNotification notification)
 		{
@@ -59,7 +59,7 @@ namespace top25
 				NSDictionary appDictionary = appsDictionaryArray.GetItem<NSDictionary> (index);
 				NSString title = (NSString)appDictionary ["Title"];
 				NSString summary = (NSString)appDictionary ["Summary"];
-				NSString imageURLString = (NSString)appDictionary ["AppIconURLString"];
+				NSString imageURLString = (NSString)appDictionary ["IconURLString"];
 				NSNumber rankFromDict = (NSNumber)appDictionary ["Rank"];
 				//				int rank = rankFromDict.Int32Value;
 				//				Console.WriteLine ("Create app, title:{0}, sumamry:{1}, url{2}, rank {3}", title, summary, imageURLString, rank);

@@ -20,8 +20,10 @@ namespace top25
 			Console.WriteLine("firstLaunch? {0}", isAppFirstLaunch());
 			if (isAppFirstLaunch () == true) {
 				NetworkController.getApps ();
+				NetworkController.getPodcasts ();
 			} else {
 				AppController.SharedInstance.loadAppsFromFile();
+				PodcastController.SharedInstance.loadPodcastsFromFile ();
 			}
 			NSUserDefaults.StandardUserDefaults.SetBool(true, "isAppAlreadyLaunchedOnce");
 			return true;

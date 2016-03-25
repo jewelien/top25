@@ -19,7 +19,16 @@ namespace top25
 			var request = NSUrlRequest.FromUrl(url);
 			var downloadTask = session.CreateDownloadTask (request);
 			downloadTask.Resume ();
+		}
 
+		public static void getPodcasts ()
+		{
+			var config = NSUrlSessionConfiguration.CreateBackgroundSessionConfiguration("com.SimpleBackgroundTransfer.BackgroundSession");
+			var session = NSUrlSession.FromConfiguration(config, (NSUrlSessionDelegate) new NetworkDelegate(), new NSOperationQueue());
+			var url = NSUrl.FromString("https://itunes.apple.com/us/rss/toppodcasts/limit=25/json");
+			var request = NSUrlRequest.FromUrl(url);
+			var downloadTask = session.CreateDownloadTask (request);
+			downloadTask.Resume ();
 		}
 	}
 }

@@ -34,50 +34,77 @@ namespace top25
 			if (err != null) {
 				return;
 			}
-//			Console.WriteLine ("jsonData: {0}", jsonData["feed"]);
+			Console.WriteLine ("jsonData: {0}", jsonData["feed"]);
 			NSDictionary feed = (NSDictionary)jsonData ["feed"];
 			var feedToSave = jsonData ["feed"];
 			//save to file with date pulled
 			NSArray entries = (NSArray)feed ["entry"];
 //			Console.WriteLine ("entries: {0}", entries);
 
-//			ArrayList appsArrayList = new ArrayList(); 
-			NSArray appNSArray = updatedAppsDictionaryArrayFromServerArray(entries);
-//			for (int i = 0; i < 25; i++) {
-//				nuint index = (nuint)i;
-//				App app = appNSArray.GetItem <App>(index);
-//				appsArrayList.Add (app);
-//			}
-//
+			NSArray contentArray = updatedContentDictionaryArrayFromServerArray(entries);
+//			Console.WriteLine ("contentArray {0}", appNSArray);
 
+			NSDictionary firstItem = entries.GetItem <NSDictionary>(0);
+			NSDictionary content = (NSDictionary)firstItem ["im:contentType"];
+			NSDictionary contentAttr = (NSDictionary)content ["attributes"];
+			NSString contentType = (NSString)contentAttr["label"];
+//			Console.WriteLine ("isEqual: {0}",contentType.IsEqual((NSString)"Application") );
+			if (contentType.IsEqual ((NSString)"Application")) {
+				saveAppsToFile (contentArray);
+			} else {
+				savePodcastsToFile (contentArray);
+			}
+		}
+
+		void saveAppsToFile (NSArray appsArray) 
+		{
 			NSMutableDictionary dictionaryToSave = new NSMutableDictionary ();
 			NSString dateString = (NSString)(string.Format("{0}", DateTime.Now.ToLocalTime()));
 			NSString dateKey = (NSString)"FetchedDateString";
 			NSString appsKey = (NSString)"Apps";
 			dictionaryToSave.Add (dateKey, dateString);
-			dictionaryToSave.Add (appsKey, appNSArray);
-			Console.WriteLine ("dictToSave: {0}", dictionaryToSave);
-			NSDictionary testDict = new NSDictionary (dateKey, dateString);
+			dictionaryToSave.Add (appsKey, appsArray);
+//			Console.WriteLine ("dictToSave: {0}", dictionaryToSave);
 
 			var documents = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
 			var filename = Path.Combine (documents, "app.json");
 			//Delete app file if existing
-//			Console.WriteLine ("filename: {0}", filename);
 			File.Delete (filename);
 			//Save apps to app file
 			NSError error = new NSError();
 			var jsonSerialized = NSJsonSerialization.Serialize(dictionaryToSave, NSJsonWritingOptions.PrettyPrinted, out error);
 			var jsonString = jsonSerialized.ToString ();
-//			var jsonString = JsonConvert.SerializeObject (dictionaryToSave, Newtonsoft.Json.Formatting.Indented);
-//			Console.WriteLine ("jsonString saveToFile {0}", jsonString);
 			File.WriteAllText(filename, jsonString);
 
 			NSNotificationCenter.DefaultCenter.PostNotificationName("updateAppsList", null);
 		}
 
-		private static NSArray updatedAppsDictionaryArrayFromServerArray(NSArray dictionaryArray)
+		void savePodcastsToFile (NSArray podcastsArray)
 		{
-			NSMutableArray appsArray = new NSMutableArray ();
+			NSMutableDictionary dictionaryToSave = new NSMutableDictionary ();
+			NSString dateString = (NSString)(string.Format("{0}", DateTime.Now.ToLocalTime()));
+			NSString dateKey = (NSString)"FetchedDateString";
+			NSString appsKey = (NSString)"Podcasts";
+			dictionaryToSave.Add (dateKey, dateString);
+			dictionaryToSave.Add (appsKey, podcastsArray);
+//			Console.WriteLine ("dictToSave: {0}", dictionaryToSave);
+
+			var documents = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
+			var filename = Path.Combine (documents, "podcast.json");
+			//Delete app file if existing
+			File.Delete (filename);
+			//Save apps to app file
+			NSError error = new NSError();
+			var jsonSerialized = NSJsonSerialization.Serialize(dictionaryToSave, NSJsonWritingOptions.PrettyPrinted, out error);
+			var jsonString = jsonSerialized.ToString ();
+			File.WriteAllText(filename, jsonString);
+
+			NSNotificationCenter.DefaultCenter.PostNotificationName("updatePodcastsList", null);
+		}
+
+		private static NSArray updatedContentDictionaryArrayFromServerArray(NSArray dictionaryArray)
+		{
+			NSMutableArray contentArray = new NSMutableArray ();
 			for (int i = 0; i < 25; i++) {
 				nuint index = (nuint)i;
 				NSDictionary entry = dictionaryArray.GetItem<NSDictionary> (index);
@@ -92,20 +119,20 @@ namespace top25
 				//				Console.WriteLine (string.Format (@"title: {0}, summary:{1}, url:{2}", title, summary, imageURLString));
 //				App newApp = new App (title, summary, imageURLString, rank);
 
-				NSMutableDictionary appToDict = new NSMutableDictionary ();
+				NSMutableDictionary contentToDict = new NSMutableDictionary ();
 				NSString titleKey = (NSString)"Title";
 				NSString summaryKey = (NSString)"Summary";
-				NSString urlKey = (NSString)"AppIconURLString";
+				NSString urlKey = (NSString)"IconURLString";
 				NSString rankKey = (NSString)"Rank";
-				appToDict.Add (titleKey, title);
-				appToDict.Add (summaryKey, summary);
-				appToDict.Add (urlKey, imageURLString);
-				appToDict.Add (rankKey, rank);
+				contentToDict.Add (titleKey, title);
+				contentToDict.Add (summaryKey, summary);
+				contentToDict.Add (urlKey, imageURLString);
+				contentToDict.Add (rankKey, rank);
 //				Console.WriteLine ("appValidJSON? : {0}", NSJsonSerialization.IsValidJSONObject(serialized));
 
-				appsArray.Add (appToDict);
+				contentArray.Add (contentToDict);
 			};
-			return appsArray;
+			return contentArray;
 		}
 	
 	}

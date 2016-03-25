@@ -1,11 +1,13 @@
 ﻿using System;
-
 using UIKit;
+using Foundation;
 
 namespace top25
 {
 	public partial class SecondViewController : UIViewController
 	{
+		UITableView podcastsTableView { get; set;}
+
 		public SecondViewController (IntPtr handle) : base (handle)
 		{
 		}
@@ -13,7 +15,19 @@ namespace top25
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();	
-			// Perform any additional setup after loading the view, typically from a nib.
+
+			podcastsTableView = new UITableView (new CoreGraphics.CGRect (0, 20, View.Bounds.Width, View.Bounds.Height - 70), UITableViewStyle.Grouped);
+			podcastsTableView.Source = new PodcastsTableSouce ();
+			Add (podcastsTableView);
+
+			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getPodcastsSuccess", reloadTable);
+		}
+
+		void reloadTable (NSNotification notification)
+		{
+			InvokeOnMainThread (() => {
+				podcastsTableView.ReloadData();
+			});
 		}
 
 		public override void DidReceiveMemoryWarning ()

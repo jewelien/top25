@@ -113,6 +113,9 @@
     <Compile Include="NetworkController.cs" />
     <Compile Include="NetworkDelegate.cs" />
     <Compile Include="AppController.cs" />
+    <Compile Include="PodcastsTableSouce.cs" />
+    <Compile Include="PodcastController.cs" />
+    <Compile Include="Podcast.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
