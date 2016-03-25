@@ -15,12 +15,6 @@ namespace top25
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-//			appsTableView = new UITableView(View.Bounds);
-//			appsTableView.Source = new AppsTableSource();
-//			appsTableView = new UITableView {
-//				Frame = new CoreGraphics.CGRect (0, 20, View.Bounds.Width, View.Bounds.Height - 70),
-//				Source = new AppsTableSource ()
-//			};
 			appsTableView = new UITableView (new CoreGraphics.CGRect (0, 20, View.Bounds.Width, View.Bounds.Height - 70), UITableViewStyle.Grouped);
 			appsTableView.Source = new AppsTableSource ();
 			Add (appsTableView);

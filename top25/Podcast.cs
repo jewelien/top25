@@ -12,14 +12,16 @@ namespace top25
 		public UIImage IconImage { get; set; }
 		public NSString IconURLString { get; set; }
 		public NSNumber Rank { get; set;}
-
-		public Podcast (NSString title, NSString summary, NSString iconURLString, NSNumber rank)
+		public NSString URLString { get; set; }
+			
+		public Podcast (NSString title, NSString summary, NSString iconURLString, NSNumber rank, NSString urlString)
 		{
 			Title = title;
 			Summary = summary;
 			IconURLString = iconURLString;
 			IconImage = FromUrl (iconURLString);
 			Rank = rank;
+			URLString = urlString;
 		}
 
 		static UIImage FromUrl (NSString uri)

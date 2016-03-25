@@ -53,7 +53,8 @@ namespace top25
 				NSString summary = (NSString)podcastDictionary ["Summary"];
 				NSString imageURLString = (NSString)podcastDictionary ["IconURLString"];
 				NSNumber rankFromDict = (NSNumber)podcastDictionary ["Rank"];
-				Podcast newPodcast = new Podcast (title, summary, imageURLString, rankFromDict);
+				NSString urlString = (NSString)podcastDictionary["URLString"];
+				Podcast newPodcast = new Podcast (title, summary, imageURLString, rankFromDict, urlString);
 				podcastsArray.Add (newPodcast);
 			} ;
 			this.podcastsList = podcastsArray;

@@ -12,8 +12,8 @@ namespace top25
 		public UIImage AppIcon { get; set; }
 		public NSString AppIconURLString { get; set; }
 		public NSNumber Rank { get; set;}
-
-		public App (NSString title, NSString summary, NSString appIconURLString, NSNumber rank)
+		public NSString URLString { get; set;}
+		public App (NSString title, NSString summary, NSString appIconURLString, NSNumber rank, NSString urlString)
 		{
 //			Console.WriteLine ("title:{0}    summary:{1}    appIconURLString:{2}", title, summary, appIconURLString);
 			Title = title;
@@ -21,15 +21,14 @@ namespace top25
 			AppIcon = FromUrl (appIconURLString);
 			AppIconURLString = appIconURLString;
 			Rank = rank;
+			URLString = urlString;
 		}
 
 		static UIImage FromUrl (NSString uri)
 		{
 //			Console.WriteLine ("uri: {0}", uri);
 			using (var url = new NSUrl (uri))
-//			Console.WriteLine ("url: {0}", url);
 			using (var data = NSData.FromUrl (url))
-//				Console.WriteLine ("daya: {0}", data);
 				if (data != null) {
 					return UIImage.LoadFromData (data);
 				} else {

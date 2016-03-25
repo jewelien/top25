@@ -45,12 +45,8 @@ namespace top25
 			}
 			NSError err;
 			NSDictionary jsonDictionary = (NSDictionary)NSJsonSerialization.Deserialize (data, NSJsonReadingOptions.MutableContainers, out err);
-			//			NSArray jsonArray = (NSArray)NSJsonSerialization.Deserialize (data, NSJsonReadingOptions.MutableContainers, out err);
-			//			Console.WriteLine("date {0}", jsonDictionary["FetchedDateString"]);
 			NSString fetchedDateString = (NSString)jsonDictionary["FetchedDateString"];
 			this.lastFetchedDateForAppsString = fetchedDateString;
-
-			//			Console.WriteLine("apps {0}", jsonArray["Apps"]);
 			NSArray appsDictionaryArray = (NSArray)jsonDictionary ["Apps"];
 
 			NSMutableArray appsArray = new NSMutableArray ();
@@ -61,13 +57,10 @@ namespace top25
 				NSString summary = (NSString)appDictionary ["Summary"];
 				NSString imageURLString = (NSString)appDictionary ["IconURLString"];
 				NSNumber rankFromDict = (NSNumber)appDictionary ["Rank"];
-				//				int rank = rankFromDict.Int32Value;
-				//				Console.WriteLine ("Create app, title:{0}, sumamry:{1}, url{2}, rank {3}", title, summary, imageURLString, rank);
-				App newApp = new App (title, summary, imageURLString, rankFromDict);
-				//				Console.WriteLine ("APP {0}, title:{1}, sumamry:{2}, url{3}", newApp, newApp.Title, newApp.Summary, newApp.AppIconURLString);
+				NSString urlString = (NSString)appDictionary["URLString"];
+				App newApp = new App (title, summary, imageURLString, rankFromDict, urlString);
 				appsArray.Add (newApp);
 			} ;
-			//			Console.WriteLine ("APPSARRAY {0}", appsArray);
 			this.appsList = appsArray;
 			NSNotificationCenter.DefaultCenter.PostNotificationName("getAppsSuccess", null);
 		}

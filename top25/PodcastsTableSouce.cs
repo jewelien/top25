@@ -35,6 +35,18 @@ namespace top25
 			return cell;
 		}
 
+		public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
+		{
+			uint indexRow = (uint)indexPath.Row;
+			Podcast podcast = podcastsList.GetItem<Podcast> (indexRow);
+			NSUrl podcastURL = new NSUrl (podcast.URLString);
+			if (UIApplication.SharedApplication.CanOpenUrl(podcastURL)) {
+				UIApplication.SharedApplication.OpenUrl (podcastURL);
+			};
+
+			tableView.DeselectRow (indexPath, true);
+		}
+
 		public override nfloat GetHeightForHeader (UITableView tableView, nint section)
 		{
 			return 50;
@@ -45,14 +57,12 @@ namespace top25
 			float screenWidth = (float) UIScreen.MainScreen.ApplicationFrame.Size.Width;
 			UIView tableHeaderView = new UIView (new CoreGraphics.CGRect (0, 0, screenWidth, 50));
 			UILabel titleLabel = new UILabel (new CoreGraphics.CGRect (10,0, screenWidth - 55, tableHeaderView.Frame.Size.Height));
-			//			titleLabel.BackgroundColor = UIColor.Yellow;
 			NSString dateString = (NSString)(string.Format("fetched: {0}",PodcastController.SharedInstance.lastFetchedDateForPodcastsString));
 			titleLabel.Text = dateString;
 			tableHeaderView.Add (titleLabel);
 			UIButton refreshButton = new UIButton (new CoreGraphics.CGRect (screenWidth - 40, tableHeaderView.Frame.Size.Height /2 -15, 30, 30));
 			refreshButton.SetImage (UIImage.FromBundle("Refresh.png"), UIControlState.Normal);
 			refreshButton.TouchUpInside += RefreshButton_TouchUpInside;;
-			//			refreshButton.BackgroundColor = UIColor.Red;
 			tableHeaderView.Add (refreshButton);
 			return tableHeaderView;
 		}

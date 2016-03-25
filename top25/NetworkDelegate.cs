@@ -12,15 +12,6 @@ namespace top25
 		public NetworkDelegate ()
 		{
 		}
-			
-		//		public override void DidWriteData (NSUrlSession session, NSUrlSessionDownloadTask downloadTask, long bytesWritten, long totalBytesWritten, long totalBytesExpectedToWrite)
-		//		{
-		//			Console.WriteLine (string.Format ("URLSession: {0}  downloadTask: {1}   bytesWritten:{0}    totalBytesWritten:{0}   bytesExpected:{0}", session, downloadTask, bytesWritten, totalBytesWritten, totalBytesExpectedToWrite ));
-		////			Console.WriteLine (string.Format ("DownloadTask: {0}  progress: {1}", downloadTask, progress));
-		////			InvokeOnMainThread( () => {
-		////				// update UI with progress bar, if desired
-		////			});
-		//		}
 
 		public override void DidFinishDownloading (NSUrlSession session, NSUrlSessionDownloadTask downloadTask, NSUrl location)
 		{
@@ -37,18 +28,13 @@ namespace top25
 			Console.WriteLine ("jsonData: {0}", jsonData["feed"]);
 			NSDictionary feed = (NSDictionary)jsonData ["feed"];
 			var feedToSave = jsonData ["feed"];
-			//save to file with date pulled
 			NSArray entries = (NSArray)feed ["entry"];
-//			Console.WriteLine ("entries: {0}", entries);
-
 			NSArray contentArray = updatedContentDictionaryArrayFromServerArray(entries);
-//			Console.WriteLine ("contentArray {0}", appNSArray);
 
 			NSDictionary firstItem = entries.GetItem <NSDictionary>(0);
 			NSDictionary content = (NSDictionary)firstItem ["im:contentType"];
 			NSDictionary contentAttr = (NSDictionary)content ["attributes"];
 			NSString contentType = (NSString)contentAttr["label"];
-//			Console.WriteLine ("isEqual: {0}",contentType.IsEqual((NSString)"Application") );
 			if (contentType.IsEqual ((NSString)"Application")) {
 				saveAppsToFile (contentArray);
 			} else {
@@ -116,18 +102,22 @@ namespace top25
 				NSDictionary imageDictionary = imagesArray.GetItem<NSDictionary> (0);
 				NSString imageURLString = (NSString)imageDictionary ["label"];
 				NSNumber rank = new NSNumber(i + 1);
-				//				Console.WriteLine (string.Format (@"title: {0}, summary:{1}, url:{2}", title, summary, imageURLString));
-//				App newApp = new App (title, summary, imageURLString, rank);
+				NSDictionary idDictionary = (NSDictionary)entry["id"];
+				NSString linkToContent = (NSString)idDictionary["label"];
+					
+//				Console.WriteLine (string.Format (@"title: {0}, summary:{1}, url:{2}", title, summary, imageURLString));
 
 				NSMutableDictionary contentToDict = new NSMutableDictionary ();
 				NSString titleKey = (NSString)"Title";
 				NSString summaryKey = (NSString)"Summary";
 				NSString urlKey = (NSString)"IconURLString";
 				NSString rankKey = (NSString)"Rank";
+				NSString contentURLKey = (NSString)"URLString";
 				contentToDict.Add (titleKey, title);
 				contentToDict.Add (summaryKey, summary);
 				contentToDict.Add (urlKey, imageURLString);
 				contentToDict.Add (rankKey, rank);
+				contentToDict.Add (contentURLKey, linkToContent);
 //				Console.WriteLine ("appValidJSON? : {0}", NSJsonSerialization.IsValidJSONObject(serialized));
 
 				contentArray.Add (contentToDict);
