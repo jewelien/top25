@@ -21,6 +21,7 @@ namespace top25
 			if (isAppFirstLaunch () == true) {
 				NetworkController.getApps ();
 				NetworkController.getPodcasts ();
+				PodcastController.SharedInstance.loadPodcastsFromFile ();
 			} else {
 				AppController.SharedInstance.loadAppsFromFile();
 				PodcastController.SharedInstance.loadPodcastsFromFile ();
