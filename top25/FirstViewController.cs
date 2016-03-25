@@ -19,14 +19,31 @@ namespace top25
 			appsTableView.Source = new AppsTableSource ();
 			Add (appsTableView);
 
-			NSString getAppsSuccess = (NSString)"getAppsSuccess";
-			NSNotificationCenter.DefaultCenter.AddObserver (getAppsSuccess, reloadTable);
+			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getAppsSuccess", reloadTable);
+			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getAppsFailed", alertErrorFetchingApps);
 		}
 
 		void reloadTable (NSNotification notification)
 		{
 			InvokeOnMainThread (() => {
 				appsTableView.ReloadData ();
+			});
+		}
+
+		void alertErrorFetchingApps (NSNotification notification)
+		{
+			InvokeOnMainThread (() => {
+				Boolean isSelectedTab = this.TabBarController.SelectedIndex == 0;
+				Console.WriteLine ("isAppTabSelected {0}", isSelectedTab);
+
+				if (isSelectedTab) {
+					UIAlertController alertController = UIAlertController.Create ("Notice", "Error pulling or updating data from apple. Please try again.", UIAlertControllerStyle.Alert);
+					UIAlertAction okAction = UIAlertAction.Create ("OK", UIAlertActionStyle.Default, a => { 
+						alertController.DismissViewController (true, null);
+					});
+					alertController.AddAction (okAction);
+					PresentViewController(alertController, true, null);
+				}
 			});
 		}
 

@@ -18,14 +18,17 @@ namespace top25
 //			Console.WriteLine (string.Format ("DownloadTask: {0}  location: {1}", downloadTask, location));
 			NSData data = NSFileManager.DefaultManager.Contents (location.Path);
 			if (data == null) {
+				alertUserOfError ();
 				return;
 			}
 			NSError err;
 			NSDictionary jsonData = (NSDictionary)NSJsonSerialization.Deserialize (data, NSJsonReadingOptions.MutableContainers, out err);
 			if (err != null) {
+				alertUserOfError ();
+				Console.WriteLine ("error with data while json deserialization: \n \"{0}\" ", err);
 				return;
 			}
-			Console.WriteLine ("jsonData: {0}", jsonData["feed"]);
+//			Console.WriteLine ("jsonData: {0}", jsonData["feed"]);
 			NSDictionary feed = (NSDictionary)jsonData ["feed"];
 			var feedToSave = jsonData ["feed"];
 			NSArray entries = (NSArray)feed ["entry"];
@@ -40,6 +43,14 @@ namespace top25
 			} else {
 				savePodcastsToFile (contentArray);
 			}
+		}
+
+		void alertUserOfError()
+		{
+//			AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//			delegate.tabBarController.selectedViewController = delegate.tabBarController.viewControllers[0];
+			NSNotificationCenter.DefaultCenter.PostNotificationName((NSString)"getAppsFailed", null);
+			NSNotificationCenter.DefaultCenter.PostNotificationName((NSString)"getPodcastsFailed", null);
 		}
 
 		void saveAppsToFile (NSArray appsArray) 
@@ -104,7 +115,6 @@ namespace top25
 				NSNumber rank = new NSNumber(i + 1);
 				NSDictionary idDictionary = (NSDictionary)entry["id"];
 				NSString linkToContent = (NSString)idDictionary["label"];
-					
 //				Console.WriteLine (string.Format (@"title: {0}, summary:{1}, url:{2}", title, summary, imageURLString));
 
 				NSMutableDictionary contentToDict = new NSMutableDictionary ();
