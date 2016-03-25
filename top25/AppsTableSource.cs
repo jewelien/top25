@@ -23,6 +23,11 @@ namespace top25
 			return 25;
 		}
 
+		public override nfloat GetHeightForRow (UITableView tableView, NSIndexPath indexPath)
+		{
+			return 80;
+		}
+
 		public override UITableViewCell GetCell (UITableView tableView, Foundation.NSIndexPath indexPath)
 		{
 			UITableViewCell cell = tableView.DequeueReusableCell ("cell");
@@ -36,8 +41,18 @@ namespace top25
 				cell.TextLabel.Text = app.Title;
 				cell.DetailTextLabel.Text = app.Summary;
 				cell.ImageView.Image = app.AppIcon;
+				cell.Accessory= UITableViewCellAccessory.DetailButton;
+				cell.DetailTextLabel.Lines = 3;
 			}
 			return cell;
+		}
+
+		public override void AccessoryButtonTapped (UITableView tableView, NSIndexPath indexPath)
+		{
+			uint indexRow = (uint)indexPath.Row;
+			App app = appsList.GetItem<App> (indexRow);
+
+			NSNotificationCenter.DefaultCenter.PostNotificationName ("appInfoTapped", app);
 		}
 
 		public override void RowSelected (UITableView tableView, Foundation.NSIndexPath indexPath)

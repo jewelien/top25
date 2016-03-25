@@ -21,6 +21,7 @@ namespace top25
 
 			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getAppsSuccess", reloadTable);
 			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getAppsFailed", alertErrorFetchingApps);
+			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"appInfoTapped", infoTappedAlert);
 		}
 
 		void reloadTable (NSNotification notification)
@@ -45,6 +46,14 @@ namespace top25
 					PresentViewController(alertController, true, null);
 				}
 			});
+		}
+
+		void infoTappedAlert (NSNotification notification)
+		{
+			App selectedApp = (App)notification.Object;
+			UIAlertController okAlertController = UIAlertController.Create (selectedApp.Title, selectedApp.Summary, UIAlertControllerStyle.Alert);
+			okAlertController.AddAction(UIAlertAction.Create("close", UIAlertActionStyle.Default, null));
+			PresentViewController (okAlertController, true, null);
 		}
 
 		public override void DidReceiveMemoryWarning ()

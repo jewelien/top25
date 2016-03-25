@@ -22,6 +22,7 @@ namespace top25
 
 			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getPodcastsSuccess", reloadTable);
 			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getPodcastsFailed", alertErrorFetchingPodcasts);
+			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"podcastInfoTapped", infoTappedAlert);
 		}
 
 		void reloadTable (NSNotification notification)
@@ -49,6 +50,14 @@ namespace top25
 
 			});
 
+		}
+
+		void infoTappedAlert (NSNotification notification)
+		{
+			Podcast selectedPodcast = (Podcast)notification.Object;
+			UIAlertController okAlertController = UIAlertController.Create (selectedPodcast.Title, selectedPodcast.Summary, UIAlertControllerStyle.Alert);
+			okAlertController.AddAction(UIAlertAction.Create("close", UIAlertActionStyle.Default, null));
+			PresentViewController (okAlertController, true, null);
 		}
 
 		public override void DidReceiveMemoryWarning ()

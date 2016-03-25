@@ -21,6 +21,11 @@ namespace top25
 			return 25;
 		}
 
+		public override nfloat GetHeightForRow (UITableView tableView, NSIndexPath indexPath)
+		{
+			return 80;
+		}
+
 		public override UITableViewCell GetCell (UITableView tableView, Foundation.NSIndexPath indexPath)
 		{
 			UITableViewCell cell = tableView.DequeueReusableCell("podcastCell");
@@ -28,11 +33,21 @@ namespace top25
 			if (podcastsList != null && podcastsList.Count > 0) {
 				uint indexRow = (uint)indexPath.Row;
 				Podcast podcast = podcastsList.GetItem<Podcast>(indexRow);
-				cell.TextLabel.Text = podcast.Title;
+				cell.TextLabel.Text = (NSString)string.Format("{0}. {1}",podcast.Rank, podcast.Title);
 				cell.DetailTextLabel.Text = podcast.Summary;
 				cell.ImageView.Image = podcast.IconImage;
+				cell.Accessory= UITableViewCellAccessory.DetailButton;
+				cell.DetailTextLabel.Lines = 3;
 			}
 			return cell;
+		}
+
+		public override void AccessoryButtonTapped (UITableView tableView, NSIndexPath indexPath)
+		{
+			uint indexRow = (uint)indexPath.Row;
+			Podcast podcast = podcastsList.GetItem<Podcast> (indexRow);
+
+			NSNotificationCenter.DefaultCenter.PostNotificationName ("podcastInfoTapped", podcast);
 		}
 
 		public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
