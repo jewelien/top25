@@ -116,9 +116,12 @@
     <Compile Include="PodcastsTableSouce.cs" />
     <Compile Include="PodcastController.cs" />
     <Compile Include="Podcast.cs" />
+    <Compile Include="GlobalMethods.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <BundleResource Include="Resources\Refresh.png" />
+    <BundleResource Include="Resources\App.png" />
+    <BundleResource Include="Resources\Podcast.png" />
   </ItemGroup>
 </Project>

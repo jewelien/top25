@@ -26,6 +26,7 @@ namespace top25
 				AppController.SharedInstance.loadAppsFromFile();
 				PodcastController.SharedInstance.loadPodcastsFromFile ();
 			}
+
 			NSUserDefaults.StandardUserDefaults.SetBool(true, "isAppAlreadyLaunchedOnce");
 			return true;
 		}

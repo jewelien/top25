@@ -47,8 +47,6 @@ namespace top25
 
 		void alertUserOfError()
 		{
-//			AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-//			delegate.tabBarController.selectedViewController = delegate.tabBarController.viewControllers[0];
 			NSNotificationCenter.DefaultCenter.PostNotificationName((NSString)"getAppsFailed", null);
 			NSNotificationCenter.DefaultCenter.PostNotificationName((NSString)"getPodcastsFailed", null);
 		}

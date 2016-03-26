@@ -18,11 +18,19 @@ namespace top25
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UINavigationBar appsNavBar { get; set; }
 
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		UITabBarItem appTabBarItem { get; set; }
+
 		void ReleaseDesignerOutlets ()
 		{
 			if (appsNavBar != null) {
 				appsNavBar.Dispose ();
 				appsNavBar = null;
+			}
+			if (appTabBarItem != null) {
+				appTabBarItem.Dispose ();
+				appTabBarItem = null;
 			}
 		}
 	}

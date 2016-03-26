@@ -1,6 +1,8 @@
 ﻿using System;
 using UIKit;
 using Foundation;
+using CoreGraphics;
+using System.Drawing;
 
 namespace top25
 {
@@ -19,6 +21,13 @@ namespace top25
 			appsTableView = new UITableView (new CoreGraphics.CGRect (0, 20, View.Bounds.Width, View.Bounds.Height - 70), UITableViewStyle.Grouped);
 			appsTableView.Source = new AppsTableSource ();
 			Add (appsTableView);
+						
+			UIImage appImage = UIImage.FromBundle("App.png");
+			appTabBarItem.Image = GlobalMethods.SharedInstance.ResizeImage (appImage, 30, 30);
+			UITabBarController controller = this.TabBarController;
+			foreach (UIViewController viewController in controller.ViewControllers) {
+				var loadIt = viewController.View.Description;
+			}
 
 			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getAppsSuccess", reloadTable);
 			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getAppsFailed", alertErrorFetchingApps);
@@ -39,12 +48,7 @@ namespace top25
 				Console.WriteLine ("isAppTabSelected {0}", isSelectedTab);
 
 				if (isSelectedTab) {
-					UIAlertController alertController = UIAlertController.Create ("Notice", "Error pulling or updating data from apple. Please try again.", UIAlertControllerStyle.Alert);
-					UIAlertAction okAction = UIAlertAction.Create ("OK", UIAlertActionStyle.Default, a => { 
-						alertController.DismissViewController (true, null);
-					});
-					alertController.AddAction (okAction);
-					PresentViewController(alertController, true, null);
+					PresentViewController(GlobalMethods.SharedInstance.genericErrorAlertController(), true, null);
 				}
 			});
 		}

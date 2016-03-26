@@ -20,11 +20,14 @@ namespace top25
 			podcastsTableView.Source = new PodcastsTableSouce ();
 			Add (podcastsTableView);
 
+			UIImage podcastImage = UIImage.FromBundle("Podcast.png");
+			podcastTabBarItem.Image = GlobalMethods.SharedInstance.ResizeImage(podcastImage, 30, 30);
+
 			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getPodcastsSuccess", reloadTable);
 			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getPodcastsFailed", alertErrorFetchingPodcasts);
 			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"podcastInfoTapped", infoTappedAlert);
 		}
-
+			
 		void reloadTable (NSNotification notification)
 		{
 			InvokeOnMainThread (() => {
@@ -40,16 +43,10 @@ namespace top25
 				Console.WriteLine ("isPodcastTabSelected {0}", isSelectedTab);
 
 				if (isSelectedTab) {
-					UIAlertController alertController = UIAlertController.Create ("Notice", "Error pulling or updating data from apple. Please try again.", UIAlertControllerStyle.Alert);
-					UIAlertAction okAction = UIAlertAction.Create ("OK", UIAlertActionStyle.Default, a => { 
-						alertController.DismissViewController (true, null);
-					});
-					alertController.AddAction (okAction);
-					PresentViewController(alertController, true, null);
+					PresentViewController(GlobalMethods.SharedInstance.genericErrorAlertController(), true, null);
 				}
 
 			});
-
 		}
 
 		void infoTappedAlert (NSNotification notification)

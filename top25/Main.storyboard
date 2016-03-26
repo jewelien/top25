@@ -32,6 +32,7 @@
                     </view>
                     <connections>
                         <outlet property="appsNavBar" destination="12" id="name-outlet-12"/>
+                        <outlet property="appTabBarItem" destination="14" id="name-outlet-14"/>
                     </connections>
                     <tabBarItem key="tabBarItem" title="Top 25 Free Apps" id="14" translatesAutoresizingMaskIntoConstraints="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
@@ -74,8 +75,11 @@
                             <constraint firstAttribute="centerY" secondItem="zEq-FU-wV5" secondAttribute="centerY" id="qzY-Ky-pLD"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Top 25 Podcast" id="15" translatesAutoresizingMaskIntoConstraints="NO"/>
+                    <tabBarItem key="tabBarItem" title="Top 25 Podcasts" id="15" translatesAutoresizingMaskIntoConstraints="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="podcastTabBarItem" destination="15" id="name-outlet-15"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>
@@ -102,8 +106,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="First" width="30" height="30"/>
+        <image name="First" width="50" height="50"/>
         <image name="Second" width="30" height="30"/>
         <image name="Refresh.png" width="50" height="50"/>
+        <image name="App.png" width="50" height="50"/>
+        <image name="Podcast.png" width="50" height="50"/>
     </resources>
 </document>
