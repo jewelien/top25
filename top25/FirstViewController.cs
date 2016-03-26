@@ -10,6 +10,8 @@ namespace top25
 	{
 
 		UITableView appsTableView { get; set; }
+		UIView loadingView;
+		UIActivityIndicatorView indicatorView;
 
 		public FirstViewController (IntPtr handle) : base (handle)
 		{
@@ -29,15 +31,34 @@ namespace top25
 				var loadIt = viewController.View.Description;
 			}
 
+			if (GlobalMethods.SharedInstance.isAppsFirstLaunch == true) {
+				initialLoadingView ();
+			}
+
 			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getAppsSuccess", reloadTable);
 			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"getAppsFailed", alertErrorFetchingApps);
 			NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"appInfoTapped", infoTappedAlert);
+		}
+
+		void initialLoadingView()
+		{
+			CGRect screenRect = (CGRect)UIScreen.MainScreen.ApplicationFrame;
+			loadingView = new UIView (frame: screenRect);
+			loadingView.BackgroundColor = UIColor.Gray.ColorWithAlpha((nfloat)0.75);
+			indicatorView = new UIActivityIndicatorView (screenRect);
+			loadingView.Add (indicatorView);
+			indicatorView.StartAnimating ();
+			Add (loadingView);
 		}
 
 		void reloadTable (NSNotification notification)
 		{
 			InvokeOnMainThread (() => {
 				appsTableView.ReloadData ();
+				if (loadingView != null) {
+					loadingView.RemoveFromSuperview ();
+					indicatorView.StopAnimating();
+				}
 			});
 		}
 

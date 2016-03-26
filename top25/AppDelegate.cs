@@ -34,8 +34,10 @@ namespace top25
 		Boolean isAppFirstLaunch()
 		{
 			if (NSUserDefaults.StandardUserDefaults.BoolForKey ("isAppAlreadyLaunchedOnce")) {
+				GlobalMethods.SharedInstance.isAppsFirstLaunch = false;
 				return false;
 			}
+			GlobalMethods.SharedInstance.isAppsFirstLaunch = true;
 			return true;
 		}
 

@@ -7,6 +7,7 @@ namespace top25
 	public class GlobalMethods
 	{
 		private static GlobalMethods s_instance;
+		public Boolean isAppsFirstLaunch;
 
 		public static GlobalMethods SharedInstance {
 			get {

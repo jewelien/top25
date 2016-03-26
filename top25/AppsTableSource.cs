@@ -6,6 +6,9 @@ namespace top25
 {
 	public class AppsTableSource : UITableViewSource
 	{
+		UIView tableHeaderView;
+		UIButton refreshButton;
+		UIActivityIndicatorView indicatorView;
 		private NSArray appsList {
 			get {
 				return AppController.SharedInstance.appsList;
@@ -72,20 +75,34 @@ namespace top25
 		public override UIView GetViewForHeader (UITableView tableView, nint section)
 		{
 			float screenWidth = (float) UIScreen.MainScreen.ApplicationFrame.Size.Width;
-			UIView tableHeaderView = new UIView (new CoreGraphics.CGRect (0, 0, screenWidth, 50));
+			tableHeaderView = new UIView (new CoreGraphics.CGRect (0, 0, screenWidth, 50));
 			UILabel titleLabel = new UILabel (new CoreGraphics.CGRect (10,0, screenWidth - 55, tableHeaderView.Frame.Size.Height));
 			NSString dateString = (NSString)(string.Format("fetched: {0}",AppController.SharedInstance.lastFetchedDateForAppsString));
 			titleLabel.Text = dateString;
 			tableHeaderView.Add (titleLabel);
-			UIButton refreshButton = new UIButton (new CoreGraphics.CGRect (screenWidth - 40, tableHeaderView.Frame.Size.Height /2 -15, 30, 30));
+
+			refreshButton = new UIButton (new CoreGraphics.CGRect (screenWidth - 40, tableHeaderView.Frame.Size.Height /2 -15, 30, 30));
 			refreshButton.SetImage (UIImage.FromBundle("Refresh.png"), UIControlState.Normal);
 			refreshButton.TouchUpInside += RefreshButton_TouchUpInside;
 			tableHeaderView.Add (refreshButton);
+			if (indicatorView != null && indicatorView.IsAnimating) {
+				indicatorView.StopAnimating ();
+			}
+
 			return tableHeaderView;
 		}
 
 		void RefreshButton_TouchUpInside (object sender, EventArgs e)
 		{
+			float screenWidth = (float) UIScreen.MainScreen.ApplicationFrame.Size.Width;
+			UIImage noImage = new UIImage ();
+			refreshButton.SetImage (noImage, UIControlState.Normal);
+
+			indicatorView = new UIActivityIndicatorView (frame: new CoreGraphics.CGRect (screenWidth - 40, tableHeaderView.Frame.Size.Height /2 -15, 30, 30));
+			indicatorView.Color = UIColor.DarkGray;
+			tableHeaderView.Add (indicatorView);
+			indicatorView.StartAnimating ();
+
 			NetworkController.getApps ();
 		}
 	}

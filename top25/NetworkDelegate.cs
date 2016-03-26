@@ -68,6 +68,10 @@ namespace top25
 			//Save apps to app file
 			NSError error = new NSError();
 			var jsonSerialized = NSJsonSerialization.Serialize(dictionaryToSave, NSJsonWritingOptions.PrettyPrinted, out error);
+			if (error != null) {
+				alertUserOfError ();
+				Console.WriteLine ("error saving apps to file: {0}", error);
+			}
 			var jsonString = jsonSerialized.ToString ();
 			File.WriteAllText(filename, jsonString);
 
@@ -91,6 +95,10 @@ namespace top25
 			//Save apps to app file
 			NSError error = new NSError();
 			var jsonSerialized = NSJsonSerialization.Serialize(dictionaryToSave, NSJsonWritingOptions.PrettyPrinted, out error);
+			if (error != null) {
+				alertUserOfError ();
+				Console.WriteLine ("error saving podcasts to file: {0}", error);
+			}
 			var jsonString = jsonSerialized.ToString ();
 			File.WriteAllText(filename, jsonString);
 
