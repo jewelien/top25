@@ -7,11 +7,12 @@ namespace top25
 	public partial class FirstViewController : UIViewController
 	{
 
+		UITableView appsTableView { get; set; }
 
 		public FirstViewController (IntPtr handle) : base (handle)
 		{
 		}
-
+			
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();

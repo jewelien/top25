@@ -18,19 +18,11 @@ namespace top25
 		[GeneratedCode ("iOS Designer", "1.0")]
 		UINavigationBar appsNavBar { get; set; }
 
-		[Outlet]
-		[GeneratedCode ("iOS Designer", "1.0")]
-		UITableView appsTableView { get; set; }
-
 		void ReleaseDesignerOutlets ()
 		{
 			if (appsNavBar != null) {
 				appsNavBar.Dispose ();
 				appsNavBar = null;
-			}
-			if (appsTableView != null) {
-				appsTableView.Dispose ();
-				appsTableView = null;
 			}
 		}
 	}

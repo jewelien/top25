@@ -14,9 +14,7 @@ namespace top25
 
 		public AppsTableSource ()
 		{
-
 		}
-
 
 		public override nint RowsInSection (UITableView tableview, nint section)
 		{
@@ -31,14 +29,14 @@ namespace top25
 		public override UITableViewCell GetCell (UITableView tableView, Foundation.NSIndexPath indexPath)
 		{
 			UITableViewCell cell = tableView.DequeueReusableCell ("cell");
-			if (cell == null) 
+			if (cell == null) {
 				cell = new UITableViewCell (UITableViewCellStyle.Subtitle, "cell");
-
+			}
 			if (appsList != null && appsList.Count > 0) {
 //				Console.WriteLine ("{0}", appsList);
 				uint indexRow = (uint)indexPath.Row;
 				App app = appsList.GetItem<App> (indexRow);
-				cell.TextLabel.Text = app.Title;
+				cell.TextLabel.Text = (NSString)string.Format("{0}. {1}",app.Rank, app.Title);
 				cell.DetailTextLabel.Text = app.Summary;
 				cell.ImageView.Image = app.AppIcon;
 				cell.Accessory= UITableViewCellAccessory.DetailButton;
@@ -51,7 +49,6 @@ namespace top25
 		{
 			uint indexRow = (uint)indexPath.Row;
 			App app = appsList.GetItem<App> (indexRow);
-
 			NSNotificationCenter.DefaultCenter.PostNotificationName ("appInfoTapped", app);
 		}
 
