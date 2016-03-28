@@ -1,22 +1,37 @@
 ﻿using System;
-using UIKit;
 using Foundation;
+using UIKit;
 
 namespace top25
 {
-	public class AppsTableSource : UITableViewSource
+	public class ContentTableSource : UITableViewSource
 	{
+		Content.ContentType contentType;
 		UIView tableHeaderView;
 		UIButton refreshButton;
 		UIActivityIndicatorView indicatorView;
-		private NSArray appsList {
+		private NSArray contentList {
 			get {
-				return ContentController.SharedInstance.appsList;
+				if (contentType == Content.ContentType.Application) {
+					return ContentController.SharedInstance.appsList;
+				} else {
+					return ContentController.SharedInstance.podcastsList;
+				}
+			}
+		}
+		private NSString lastFetchedDateString {
+			get {
+				if (contentType == Content.ContentType.Application) {
+					return (NSString)(string.Format("fetched: {0}",ContentController.SharedInstance.lastFetchedDateForAppsString));
+				} else {
+					return (NSString)(string.Format("fetched: {0}",ContentController.SharedInstance.lastFetchedDateForPodcastsString));
+				}
 			}
 		}
 
-		public AppsTableSource (NSArray contentArray)
+		public ContentTableSource (Content.ContentType typeOfContent)
 		{
+			contentType = typeOfContent;
 		}
 
 		public override nint RowsInSection (UITableView tableview, nint section)
@@ -35,14 +50,14 @@ namespace top25
 			if (cell == null) {
 				cell = new UITableViewCell (UITableViewCellStyle.Subtitle, "cell");
 			}
-			if (appsList != null && appsList.Count > 0) {
-//				Console.WriteLine ("{0}", appsList);
+			if (contentList != null && contentList.Count > 0) {
 				uint indexRow = (uint)indexPath.Row;
-				Content app = appsList.GetItem<Content> (indexRow);
-				cell.TextLabel.Text = (NSString)string.Format("{0}. {1}",app.Rank, app.Title);
-				cell.DetailTextLabel.Text = app.Summary;
-				cell.ImageView.Image = app.IconImage;
-				cell.Accessory= UITableViewCellAccessory.DetailButton;
+
+				Content contentAtIndex = contentList.GetItem<Content> (indexRow);
+				cell.TextLabel.Text = (NSString)string.Format("{0}. {1}",contentAtIndex.Rank, contentAtIndex.Title);
+				cell.DetailTextLabel.Text = contentAtIndex.Summary;
+				cell.ImageView.Image = contentAtIndex.IconImage;
+				cell.Accessory = UITableViewCellAccessory.DetailButton;
 				cell.DetailTextLabel.Lines = 3;
 			}
 			return cell;
@@ -51,14 +66,14 @@ namespace top25
 		public override void AccessoryButtonTapped (UITableView tableView, NSIndexPath indexPath)
 		{
 			uint indexRow = (uint)indexPath.Row;
-			Content app = appsList.GetItem<Content> (indexRow);
+			Content app = contentList.GetItem<Content> (indexRow);
 			NSNotificationCenter.DefaultCenter.PostNotificationName ("appInfoTapped", app);
 		}
 
 		public override void RowSelected (UITableView tableView, Foundation.NSIndexPath indexPath)
 		{
 			uint indexRow = (uint)indexPath.Row;
-			Content app = appsList.GetItem<Content> (indexRow);
+			Content app = contentList.GetItem<Content> (indexRow);
 			NSUrl appURL = new NSUrl (app.URLString);
 			if (UIApplication.SharedApplication.CanOpenUrl(appURL)) {
 				UIApplication.SharedApplication.OpenUrl (appURL);
@@ -77,9 +92,7 @@ namespace top25
 			float screenWidth = (float) UIScreen.MainScreen.ApplicationFrame.Size.Width;
 			tableHeaderView = new UIView (new CoreGraphics.CGRect (0, 0, screenWidth, 50));
 			UILabel titleLabel = new UILabel (new CoreGraphics.CGRect (10,0, screenWidth - 55, tableHeaderView.Frame.Size.Height));
-			NSString dateString = (NSString)(string.Format("fetched: {0}",ContentController.SharedInstance.lastFetchedDateForAppsString));
-//			NSString dateString = (NSString)(string.Format("fetched: {0}",AppController.SharedInstance.lastFetchedDateForAppsString));
-			titleLabel.Text = dateString;
+			titleLabel.Text = lastFetchedDateString;
 			tableHeaderView.Add (titleLabel);
 
 			refreshButton = new UIButton (new CoreGraphics.CGRect (screenWidth - 40, tableHeaderView.Frame.Size.Height /2 -15, 30, 30));
@@ -104,8 +117,13 @@ namespace top25
 			tableHeaderView.Add (indicatorView);
 			indicatorView.StartAnimating ();
 
-			NetworkController.getContent (Content.ContentType.Application);
-//			NetworkController.getApps ();
+			if (contentType == Content.ContentType.Application) {
+				NetworkController.getContent (Content.ContentType.Application);
+			} else {
+				NetworkController.getContent (Content.ContentType.Podcast);
+			}
+
+
 		}
 	}
 }

@@ -17,7 +17,7 @@ namespace top25
 			base.ViewDidLoad ();	
 
 			podcastsTableView = new UITableView (new CoreGraphics.CGRect (0, 20, View.Bounds.Width, View.Bounds.Height - 70), UITableViewStyle.Grouped);
-			podcastsTableView.Source = new PodcastsTableSouce ();
+			podcastsTableView.Source = new ContentTableSource (Content.ContentType.Podcast);
 			Add (podcastsTableView);
 
 			UIImage podcastImage = UIImage.FromBundle("Podcast.png");

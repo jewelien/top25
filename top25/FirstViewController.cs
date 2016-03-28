@@ -21,7 +21,7 @@ namespace top25
 		{
 			base.ViewDidLoad ();
 			appsTableView = new UITableView (new CoreGraphics.CGRect (0, 20, View.Bounds.Width, View.Bounds.Height - 70), UITableViewStyle.Grouped);
-			appsTableView.Source = new AppsTableSource ();
+			appsTableView.Source = new ContentTableSource (Content.ContentType.Application);
 			Add (appsTableView);
 						
 			UIImage appImage = UIImage.FromBundle("App.png");

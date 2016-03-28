@@ -105,16 +105,15 @@
     <Compile Include="FirstViewController.designer.cs">
       <DependentUpon>FirstViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="AppsTableSource.cs" />
     <Compile Include="SecondViewController.designer.cs">
       <DependentUpon>SecondViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="NetworkController.cs" />
     <Compile Include="NetworkDelegate.cs" />
-    <Compile Include="PodcastsTableSouce.cs" />
     <Compile Include="GlobalMethods.cs" />
     <Compile Include="ContentController.cs" />
     <Compile Include="Content.cs" />
+    <Compile Include="ContentTableSource.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
