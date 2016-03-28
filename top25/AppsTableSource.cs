@@ -11,7 +11,7 @@ namespace top25
 		UIActivityIndicatorView indicatorView;
 		private NSArray appsList {
 			get {
-				return AppController.SharedInstance.appsList;
+				return ContentController.SharedInstance.appsList;
 			}
 		}
 
@@ -38,10 +38,10 @@ namespace top25
 			if (appsList != null && appsList.Count > 0) {
 //				Console.WriteLine ("{0}", appsList);
 				uint indexRow = (uint)indexPath.Row;
-				App app = appsList.GetItem<App> (indexRow);
+				Content app = appsList.GetItem<Content> (indexRow);
 				cell.TextLabel.Text = (NSString)string.Format("{0}. {1}",app.Rank, app.Title);
 				cell.DetailTextLabel.Text = app.Summary;
-				cell.ImageView.Image = app.AppIcon;
+				cell.ImageView.Image = app.IconImage;
 				cell.Accessory= UITableViewCellAccessory.DetailButton;
 				cell.DetailTextLabel.Lines = 3;
 			}
@@ -51,14 +51,14 @@ namespace top25
 		public override void AccessoryButtonTapped (UITableView tableView, NSIndexPath indexPath)
 		{
 			uint indexRow = (uint)indexPath.Row;
-			App app = appsList.GetItem<App> (indexRow);
+			Content app = appsList.GetItem<Content> (indexRow);
 			NSNotificationCenter.DefaultCenter.PostNotificationName ("appInfoTapped", app);
 		}
 
 		public override void RowSelected (UITableView tableView, Foundation.NSIndexPath indexPath)
 		{
 			uint indexRow = (uint)indexPath.Row;
-			App app = appsList.GetItem<App> (indexRow);
+			Content app = appsList.GetItem<Content> (indexRow);
 			NSUrl appURL = new NSUrl (app.URLString);
 			if (UIApplication.SharedApplication.CanOpenUrl(appURL)) {
 				UIApplication.SharedApplication.OpenUrl (appURL);
@@ -77,7 +77,8 @@ namespace top25
 			float screenWidth = (float) UIScreen.MainScreen.ApplicationFrame.Size.Width;
 			tableHeaderView = new UIView (new CoreGraphics.CGRect (0, 0, screenWidth, 50));
 			UILabel titleLabel = new UILabel (new CoreGraphics.CGRect (10,0, screenWidth - 55, tableHeaderView.Frame.Size.Height));
-			NSString dateString = (NSString)(string.Format("fetched: {0}",AppController.SharedInstance.lastFetchedDateForAppsString));
+			NSString dateString = (NSString)(string.Format("fetched: {0}",ContentController.SharedInstance.lastFetchedDateForAppsString));
+//			NSString dateString = (NSString)(string.Format("fetched: {0}",AppController.SharedInstance.lastFetchedDateForAppsString));
 			titleLabel.Text = dateString;
 			tableHeaderView.Add (titleLabel);
 
@@ -103,7 +104,8 @@ namespace top25
 			tableHeaderView.Add (indicatorView);
 			indicatorView.StartAnimating ();
 
-			NetworkController.getApps ();
+			NetworkController.getContent (Content.ContentType.Application);
+//			NetworkController.getApps ();
 		}
 	}
 }

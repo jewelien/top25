@@ -19,12 +19,12 @@ namespace top25
 		{
 			Console.WriteLine("firstLaunch? {0}", isAppFirstLaunch());
 			if (isAppFirstLaunch () == true) {
-				NetworkController.getApps ();
-				NetworkController.getPodcasts ();
-				PodcastController.SharedInstance.loadPodcastsFromFile ();
+				NetworkController.getContent (Content.ContentType.Application);
+				NetworkController.getContent (Content.ContentType.Podcast);
+				ContentController.SharedInstance.loadFromFileContentTypeOf (Content.ContentType.Podcast);
 			} else {
-				AppController.SharedInstance.loadAppsFromFile();
-				PodcastController.SharedInstance.loadPodcastsFromFile ();
+				ContentController.SharedInstance.loadFromFileContentTypeOf (Content.ContentType.Application);
+				ContentController.SharedInstance.loadFromFileContentTypeOf (Content.ContentType.Podcast);
 			}
 
 			NSUserDefaults.StandardUserDefaults.SetBool(true, "isAppAlreadyLaunchedOnce");

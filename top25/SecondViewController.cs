@@ -51,7 +51,7 @@ namespace top25
 
 		void infoTappedAlert (NSNotification notification)
 		{
-			Podcast selectedPodcast = (Podcast)notification.Object;
+			Content selectedPodcast = (Content)notification.Object;
 			UIAlertController okAlertController = UIAlertController.Create (selectedPodcast.Title, selectedPodcast.Summary, UIAlertControllerStyle.Alert);
 			okAlertController.AddAction(UIAlertAction.Create("close", UIAlertActionStyle.Default, null));
 			PresentViewController (okAlertController, true, null);

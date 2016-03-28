@@ -109,14 +109,12 @@
     <Compile Include="SecondViewController.designer.cs">
       <DependentUpon>SecondViewController.cs</DependentUpon>
     </Compile>
-    <Compile Include="App.cs" />
     <Compile Include="NetworkController.cs" />
     <Compile Include="NetworkDelegate.cs" />
-    <Compile Include="AppController.cs" />
     <Compile Include="PodcastsTableSouce.cs" />
-    <Compile Include="PodcastController.cs" />
-    <Compile Include="Podcast.cs" />
     <Compile Include="GlobalMethods.cs" />
+    <Compile Include="ContentController.cs" />
+    <Compile Include="Content.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

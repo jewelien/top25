@@ -12,7 +12,7 @@ namespace top25
 
 		private NSArray podcastsList {
 			get {
-				return PodcastController.SharedInstance.podcastsList;
+				return ContentController.SharedInstance.podcastsList;
 			}
 		}
 
@@ -36,7 +36,7 @@ namespace top25
 			cell = new UITableViewCell (UITableViewCellStyle.Subtitle, "podastCell");
 			if (podcastsList != null && podcastsList.Count > 0) {
 				uint indexRow = (uint)indexPath.Row;
-				Podcast podcast = podcastsList.GetItem<Podcast>(indexRow);
+				Content podcast = podcastsList.GetItem<Content>(indexRow);
 				cell.TextLabel.Text = (NSString)string.Format("{0}. {1}",podcast.Rank, podcast.Title);
 				cell.DetailTextLabel.Text = podcast.Summary;
 				cell.ImageView.Image = podcast.IconImage;
@@ -49,7 +49,7 @@ namespace top25
 		public override void AccessoryButtonTapped (UITableView tableView, NSIndexPath indexPath)
 		{
 			uint indexRow = (uint)indexPath.Row;
-			Podcast podcast = podcastsList.GetItem<Podcast> (indexRow);
+			Content podcast = podcastsList.GetItem<Content> (indexRow);
 
 			NSNotificationCenter.DefaultCenter.PostNotificationName ("podcastInfoTapped", podcast);
 		}
@@ -57,7 +57,7 @@ namespace top25
 		public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
 		{
 			uint indexRow = (uint)indexPath.Row;
-			Podcast podcast = podcastsList.GetItem<Podcast> (indexRow);
+			Content podcast = podcastsList.GetItem<Content> (indexRow);
 			NSUrl podcastURL = new NSUrl (podcast.URLString);
 			if (UIApplication.SharedApplication.CanOpenUrl(podcastURL)) {
 				UIApplication.SharedApplication.OpenUrl (podcastURL);
@@ -76,7 +76,7 @@ namespace top25
 			float screenWidth = (float) UIScreen.MainScreen.ApplicationFrame.Size.Width;
 			tableHeaderView = new UIView (new CoreGraphics.CGRect (0, 0, screenWidth, 50));
 			UILabel titleLabel = new UILabel (new CoreGraphics.CGRect (10,0, screenWidth - 55, tableHeaderView.Frame.Size.Height));
-			NSString dateString = (NSString)(string.Format("fetched: {0}",PodcastController.SharedInstance.lastFetchedDateForPodcastsString));
+			NSString dateString = (NSString)(string.Format("fetched: {0}",ContentController.SharedInstance.lastFetchedDateForPodcastsString));
 			titleLabel.Text = dateString;
 			tableHeaderView.Add (titleLabel);
 
@@ -102,7 +102,7 @@ namespace top25
 			tableHeaderView.Add (indicatorView);
 			indicatorView.StartAnimating ();
 
-			NetworkController.getPodcasts();
+			NetworkController.getContent (Content.ContentType.Podcast);
 		}
 	}
 }

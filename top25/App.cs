@@ -15,7 +15,6 @@ namespace top25
 		public NSString URLString { get; set;}
 		public App (NSString title, NSString summary, NSString appIconURLString, NSNumber rank, NSString urlString)
 		{
-//			Console.WriteLine ("title:{0}    summary:{1}    appIconURLString:{2}", title, summary, appIconURLString);
 			Title = title;
 			Summary = summary;
 			AppIcon = FromUrl (appIconURLString);

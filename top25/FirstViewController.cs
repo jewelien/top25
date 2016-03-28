@@ -76,7 +76,7 @@ namespace top25
 
 		void infoTappedAlert (NSNotification notification)
 		{
-			App selectedApp = (App)notification.Object;
+			Content selectedApp = (Content)notification.Object;
 			UIAlertController okAlertController = UIAlertController.Create (selectedApp.Title, selectedApp.Summary, UIAlertControllerStyle.Alert);
 			okAlertController.AddAction(UIAlertAction.Create("close", UIAlertActionStyle.Default, null));
 			PresentViewController (okAlertController, true, null);

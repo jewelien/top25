@@ -15,7 +15,6 @@ namespace top25
 
 		public override void DidFinishDownloading (NSUrlSession session, NSUrlSessionDownloadTask downloadTask, NSUrl location)
 		{
-//			Console.WriteLine (string.Format ("DownloadTask: {0}  location: {1}", downloadTask, location));
 			NSData data = NSFileManager.DefaultManager.Contents (location.Path);
 			if (data == null) {
 				alertUserOfError ();
@@ -28,7 +27,6 @@ namespace top25
 				Console.WriteLine ("error with data while json deserialization: \n \"{0}\" ", err);
 				return;
 			}
-//			Console.WriteLine ("jsonData: {0}", jsonData["feed"]);
 			NSDictionary feed = (NSDictionary)jsonData ["feed"];
 			var feedToSave = jsonData ["feed"];
 			NSArray entries = (NSArray)feed ["entry"];
@@ -39,9 +37,9 @@ namespace top25
 			NSDictionary contentAttr = (NSDictionary)content ["attributes"];
 			NSString contentType = (NSString)contentAttr["label"];
 			if (contentType.IsEqual ((NSString)"Application")) {
-				saveAppsToFile (contentArray);
+				saveContentToFileOfType (contentArray, Content.ContentType.Application);
 			} else {
-				savePodcastsToFile (contentArray);
+				saveContentToFileOfType (contentArray, Content.ContentType.Podcast);
 			}
 		}
 
@@ -51,18 +49,27 @@ namespace top25
 			NSNotificationCenter.DefaultCenter.PostNotificationName((NSString)"getPodcastsFailed", null);
 		}
 
-		void saveAppsToFile (NSArray appsArray) 
+		void saveContentToFileOfType(NSArray contentArray, Content.ContentType typeOfContent)
 		{
+
 			NSMutableDictionary dictionaryToSave = new NSMutableDictionary ();
 			NSString dateString = (NSString)(string.Format("{0}", DateTime.Now.ToLocalTime()));
 			NSString dateKey = (NSString)"FetchedDateString";
-			NSString appsKey = (NSString)"Apps";
-			dictionaryToSave.Add (dateKey, dateString);
-			dictionaryToSave.Add (appsKey, appsArray);
-//			Console.WriteLine ("dictToSave: {0}", dictionaryToSave);
-
+			NSString appsKey;
 			var documents = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
-			var filename = Path.Combine (documents, "app.json");
+			NSString filename;
+
+			if (typeOfContent == Content.ContentType.Application) {
+				appsKey = (NSString)"Apps";
+				filename = (NSString)Path.Combine (documents, "app.json");
+			} else {
+				appsKey = (NSString)"Podcasts";
+				filename = (NSString)Path.Combine (documents, "podcast.json");
+			}
+
+			dictionaryToSave.Add (dateKey, dateString);
+			dictionaryToSave.Add (appsKey, contentArray);
+
 			//Delete app file if existing
 			File.Delete (filename);
 			//Save apps to app file
@@ -70,39 +77,17 @@ namespace top25
 			var jsonSerialized = NSJsonSerialization.Serialize(dictionaryToSave, NSJsonWritingOptions.PrettyPrinted, out error);
 			if (error != null) {
 				alertUserOfError ();
-				Console.WriteLine ("error saving apps to file: {0}", error);
+				Console.WriteLine ("error saving content to file: {0}, ContentType {1}", error, typeOfContent);
 			}
 			var jsonString = jsonSerialized.ToString ();
 			File.WriteAllText(filename, jsonString);
 
-			NSNotificationCenter.DefaultCenter.PostNotificationName("updateAppsList", null);
-		}
-
-		void savePodcastsToFile (NSArray podcastsArray)
-		{
-			NSMutableDictionary dictionaryToSave = new NSMutableDictionary ();
-			NSString dateString = (NSString)(string.Format("{0}", DateTime.Now.ToLocalTime()));
-			NSString dateKey = (NSString)"FetchedDateString";
-			NSString appsKey = (NSString)"Podcasts";
-			dictionaryToSave.Add (dateKey, dateString);
-			dictionaryToSave.Add (appsKey, podcastsArray);
-//			Console.WriteLine ("dictToSave: {0}", dictionaryToSave);
-
-			var documents = Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
-			var filename = Path.Combine (documents, "podcast.json");
-			//Delete app file if existing
-			File.Delete (filename);
-			//Save apps to app file
-			NSError error = new NSError();
-			var jsonSerialized = NSJsonSerialization.Serialize(dictionaryToSave, NSJsonWritingOptions.PrettyPrinted, out error);
-			if (error != null) {
-				alertUserOfError ();
-				Console.WriteLine ("error saving podcasts to file: {0}", error);
+			if (typeOfContent == Content.ContentType.Application) {
+				NSNotificationCenter.DefaultCenter.PostNotificationName("updateAppsList", null);
+			} else {
+				NSNotificationCenter.DefaultCenter.PostNotificationName("updatePodcastsList", null);
 			}
-			var jsonString = jsonSerialized.ToString ();
-			File.WriteAllText(filename, jsonString);
 
-			NSNotificationCenter.DefaultCenter.PostNotificationName("updatePodcastsList", null);
 		}
 
 		private static NSArray updatedContentDictionaryArrayFromServerArray(NSArray dictionaryArray)
@@ -113,6 +98,8 @@ namespace top25
 				NSDictionary entry = dictionaryArray.GetItem<NSDictionary> (index);
 				NSDictionary titleDict = (NSDictionary)entry ["im:name"];
 				NSString title = (NSString)titleDict ["label"];
+				NSString titleTest = (NSString)((NSDictionary)entry ["im:name"])["label"];
+				Console.WriteLine ("titleTest: {0}", titleTest);
 				NSDictionary summaryDict = (NSDictionary)entry ["summary"];
 				NSString summary = (NSString)summaryDict ["label"];
 				NSArray imagesArray = (NSArray)entry ["im:image"];
@@ -121,7 +108,6 @@ namespace top25
 				NSNumber rank = new NSNumber(i + 1);
 				NSDictionary idDictionary = (NSDictionary)entry["id"];
 				NSString linkToContent = (NSString)idDictionary["label"];
-//				Console.WriteLine (string.Format (@"title: {0}, summary:{1}, url:{2}", title, summary, imageURLString));
 
 				NSMutableDictionary contentToDict = new NSMutableDictionary ();
 				NSString titleKey = (NSString)"Title";
@@ -134,7 +120,6 @@ namespace top25
 				contentToDict.Add (urlKey, imageURLString);
 				contentToDict.Add (rankKey, rank);
 				contentToDict.Add (contentURLKey, linkToContent);
-//				Console.WriteLine ("appValidJSON? : {0}", NSJsonSerialization.IsValidJSONObject(serialized));
 
 				contentArray.Add (contentToDict);
 			};
