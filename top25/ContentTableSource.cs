@@ -67,7 +67,11 @@ namespace top25
 		{
 			uint indexRow = (uint)indexPath.Row;
 			Content app = contentList.GetItem<Content> (indexRow);
-			NSNotificationCenter.DefaultCenter.PostNotificationName ("appInfoTapped", app);
+			if (contentType == Content.ContentType.Application) {
+				NSNotificationCenter.DefaultCenter.PostNotificationName ("appInfoTapped", app);
+			} else {
+				NSNotificationCenter.DefaultCenter.PostNotificationName ("podcastInfoTapped", app);
+			}
 		}
 
 		public override void RowSelected (UITableView tableView, Foundation.NSIndexPath indexPath)
@@ -122,7 +126,6 @@ namespace top25
 			} else {
 				NetworkController.getContent (Content.ContentType.Podcast);
 			}
-
 
 		}
 	}
